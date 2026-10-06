@@ -1,0 +1,31 @@
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.heading.left {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.eyebrow {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 12px;
+}
+
+.left .title {
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  .heading {
+    margin-bottom: 32px;
+  }
+}

@@ -1,0 +1,227 @@
+.back {
+  display: inline-block;
+  margin-bottom: 12px;
+  font: var(--font-14-bold);
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--white);
+}
+
+.backInline {
+  color: var(--cyan);
+}
+
+.backBtn {
+  margin-top: 16px;
+  padding: 10px 16px;
+  font: var(--font-14-bold);
+  color: var(--white);
+  background: transparent;
+  border: 1px solid var(--cyan);
+  cursor: pointer;
+}
+
+.siteHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.brand {
+  font: var(--font-18-bold);
+  color: var(--cyan);
+  letter-spacing: 0.5px;
+}
+
+.brandTag {
+  font: var(--font-14-normal);
+  color: var(--gray-border);
+}
+
+/**
+ * Заголовок + 3D (стадии | модель | свойства) в одну «экранную» высоту.
+ */
+.hero {
+  --project-workspace-offset: 220px;
+  margin-bottom: 32px;
+}
+
+.projectHeading {
+  margin-bottom: 0 !important;
+  flex: 1;
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-bottom: 16px;
+}
+
+.layerToggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 4px;
+}
+
+.layerBtn {
+  padding: 6px 14px;
+  font: var(--font-12-bold);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--gray-border);
+  background: transparent;
+  border: 1px solid rgba(0, 188, 212, 0.35);
+  cursor: pointer;
+}
+
+.layerBtn:hover {
+  color: var(--white);
+  border-color: rgba(0, 188, 212, 0.7);
+}
+
+.layerBtnActive {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: rgba(0, 188, 212, 0.1);
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin: 0 0 24px;
+}
+
+.meta {
+  font: var(--font-14-normal);
+  color: var(--gray-border);
+}
+
+.aggregates {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: start;
+}
+
+.error {
+  margin: 0 0 16px;
+  font: var(--font-14-normal);
+  color: #ff8a80;
+}
+
+.details {
+  padding-top: 8px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: stretch;
+  height: calc(100dvh - var(--project-workspace-offset));
+  min-height: 240px;
+  max-height: calc(100dvh - var(--project-workspace-offset));
+}
+
+.workspaceNoProps {
+  grid-template-columns: 320px minmax(0, 1fr);
+}
+
+.phases {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.viewer {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.viewer > * {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.viewerFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 0;
+  font: var(--font-16-normal);
+  color: var(--gray-border);
+  background: rgba(10, 22, 40, 0.5);
+  border: 1px solid rgba(0, 188, 212, 0.35);
+}
+
+@media (max-width: 1200px) {
+  .hero {
+    --project-workspace-offset: 268px;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+    height: auto;
+    max-height: none;
+  }
+
+  .viewer {
+    order: 1;
+    min-height: min(52vh, 520px);
+  }
+
+  .phases {
+    order: 2;
+    height: auto;
+    max-height: min(280px, 36vh);
+  }
+
+  .side {
+    order: 3;
+  }
+
+  .aggregates {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    --project-workspace-offset: 248px;
+  }
+
+  .viewer {
+    min-height: min(48vh, 400px);
+  }
+
+  .phases {
+    max-height: min(320px, 42vh);
+  }
+}

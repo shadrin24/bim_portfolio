@@ -1,0 +1,146 @@
+.card {
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+  height: auto;
+  padding: 0;
+  background: rgba(10, 22, 40, 0.5);
+  border: 1px solid rgba(0, 188, 212, 0.35);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--cyan);
+}
+
+.link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+/**
+ * Высота обложки задаём мы; PNG масштабируется по высоте,
+ * ширина карточки = ширина картинки (пропорции cover.png).
+ */
+/**
+ * Высота модели задаём мы; PNG масштабируется по высоте.
+ * 20px — отступ самой модели от краёв карточки.
+ */
+.cover {
+  --project-card-cover-height: 360px;
+  position: relative;
+  box-sizing: border-box;
+  height: calc(var(--project-card-cover-height) + 40px);
+  width: fit-content;
+  max-width: 100%;
+  padding: 20px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.image {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: top center;
+}
+
+.coverPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* без PNG — квадрат по нашей высоте */
+  width: var(--project-card-cover-height);
+  height: 100%;
+  font: var(--font-32-bold);
+  letter-spacing: 4px;
+  color: var(--cyan);
+  opacity: 0.5;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  /* не шире обложки: ширина карточки = ширина PNG + боковые отступы */
+  width: 0;
+  min-width: 100%;
+  padding: 0 20px 20px;
+}
+
+.stage {
+  font: var(--font-12-bold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.title {
+  margin: 0;
+  font: var(--font-21-bold);
+  color: var(--white);
+  overflow-wrap: anywhere;
+}
+
+.address {
+  margin: 0;
+  font: var(--font-14-normal);
+  color: var(--gray-border);
+  overflow-wrap: anywhere;
+}
+
+.disciplines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.discipline {
+  padding: 4px 10px;
+  font: var(--font-12-bold);
+  color: var(--cyan);
+  border: 1px solid rgba(0, 188, 212, 0.45);
+}
+
+@media (max-width: 768px) {
+  .card,
+  .link {
+    width: 100%;
+  }
+
+  .cover {
+    --project-card-cover-height: 280px;
+    width: 100%;
+  }
+
+  .image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .coverPlaceholder {
+    width: 100%;
+  }
+
+  .body {
+    width: auto;
+    min-width: 0;
+    padding: 0 20px 20px;
+  }
+
+  .title {
+    font: var(--font-18-bold);
+  }
+}

@@ -1,0 +1,35 @@
+.heroCardSubtitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--cyan);
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.heroCardSubtitle:last-child {
+  margin-bottom: 0;
+}
+
+.heroCardSubtitleWhite {
+  color: var(--white);
+}
+
+@media (max-width: 1200px) {
+  .heroCardSubtitle {
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroCardSubtitle {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroCardSubtitle {
+    font-size: 18px;
+  }
+}

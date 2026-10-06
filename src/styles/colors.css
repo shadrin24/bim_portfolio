@@ -1,0 +1,24 @@
+:root {
+  --navy: #0a1628;         /* тёмно-синий фон */
+  --navy-deep: #0a2565;    /* синий для телефона */
+  --blue: #2196f3;         /* ярко-синий (кнопки, акценты) */
+  --cyan: #00bcd4;         /* голубой как в логотипе */
+
+  --white: #ffffff;
+  --gray-light: #f5f7fa;
+  --gray-border: #e0e6ed;
+  --gray-text: #555555;
+  --gray-dark: #333333;
+
+  /* затемнение фона (градиент поверх мозаики) */
+  --bg-overlay-start: rgba(10, 22, 40, 0.92);
+  --bg-overlay-end: rgba(10, 22, 40, 0.98);
+
+  /* градиент фона секции «под ключ» сверху вниз */
+  --bg-home-hero-gradient: linear-gradient(to bottom, rgba(247,250,234, 0.9), rgba(247,250,234, 0.6));
+
+  /* клетка как в тетради (вертикальные и горизонтальные линии) */
+  --bg-grid-vertical: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.05) 0, rgba(0, 0, 0, 0.05) 1px, transparent 0.05px, transparent 20px);
+  --bg-grid-horizontal: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0, rgba(0, 0, 0, 0.05) 1px, transparent 0.05px, transparent 20px);
+}
+

@@ -1,0 +1,32 @@
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 60vh;
+  min-width: 380px;
+}
+
+.content {
+  width: 100%;
+  padding-top: 24px;
+  padding-bottom: 48px;
+}
+
+@media (min-width: 1200px) {
+  .content {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .content {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 40px 20px 56px;
+  }
+}

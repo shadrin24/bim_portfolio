@@ -1,0 +1,33 @@
+.intro {
+  max-width: 900px;
+  margin-bottom: 48px;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.empty {
+  margin: 0;
+  font: var(--font-16-normal);
+  color: var(--gray-border);
+}
+
+@media (max-width: 1200px) {
+  .grid {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .intro {
+    margin-bottom: 32px;
+  }
+
+  .grid {
+    gap: 16px;
+  }
+}

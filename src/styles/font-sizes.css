@@ -1,0 +1,32 @@
+:root {
+  /* Абзац: межстрочный интервал для текста */
+  --font-line-paragraph: 1.6;
+
+  /* Формат: размер (px) + жирность + абзац (line-height). Использование: font: var(--font-12-bold); */
+  --font-12-normal: 400 12px / var(--font-line-paragraph) inherit;
+  --font-12-bold: 700 12px / var(--font-line-paragraph) inherit;
+
+  --font-14-normal: 400 14px / var(--font-line-paragraph) inherit;
+  --font-14-bold: 700 14px / var(--font-line-paragraph) inherit;
+
+  --font-16-normal: 400 16px / var(--font-line-paragraph) inherit;
+  --font-16-bold: 700 16px / var(--font-line-paragraph) inherit;
+
+  --font-18-normal: 400 18px / var(--font-line-paragraph) inherit;
+  --font-18-bold: 700 18px / var(--font-line-paragraph) inherit;
+
+  --font-21-normal: 400 21px / var(--font-line-paragraph) inherit;
+  --font-21-bold: 700 21px / var(--font-line-paragraph) inherit;
+
+  --font-24-normal: 400 24px / var(--font-line-paragraph) inherit;
+  --font-24-bold: 700 24px / var(--font-line-paragraph) inherit;
+
+  --font-27-normal: 400 27px / var(--font-line-paragraph) inherit;
+  --font-27-bold: 700 27px / var(--font-line-paragraph) inherit;
+
+  --font-32-normal: 400 32px / var(--font-line-paragraph) inherit;
+  --font-32-bold: 700 32px / var(--font-line-paragraph) inherit;
+
+  --font-40-normal: 400 40px / var(--font-line-paragraph) inherit;
+  --font-40-bold: 700 40px / var(--font-line-paragraph) inherit;
+}

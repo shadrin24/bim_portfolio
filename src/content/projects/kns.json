@@ -1,0 +1,28 @@
+{
+  "slug": "kns",
+  "title": "Типовая КНС",
+  "stage": "Рабочая документация",
+  "disciplines": ["КР", "ТХ"],
+  "description": "Типовая канализационная насосная станция: КР (бетон, утеплитель, павильон) и ТХ (трубопроводы, насосы, арматура).",
+  "modelUpdatedAt": "2026-10-05",
+  "cover": "/models/kns/cover.png",
+  "modelUrl": "/models/kns/model.glb",
+  "propertiesUrl": "/models/kns/properties.json",
+  "demoScene": false,
+  "layers": [
+    {
+      "id": "kr",
+      "label": "КР",
+      "modelUrl": "/models/kns/model.glb",
+      "propertiesUrl": "/models/kns/properties.json",
+      "demoScene": false
+    },
+    {
+      "id": "tx",
+      "label": "ТХ",
+      "modelUrl": "/models/kns/model-tx.glb",
+      "propertiesUrl": "/models/kns/properties-tx.json",
+      "demoScene": false
+    }
+  ]
+}

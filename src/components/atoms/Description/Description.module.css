@@ -1,0 +1,28 @@
+.heroCardDescription {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--white);
+  text-align: left;
+}
+
+.heroCardDescription + .heroCardDescription {
+  margin-top: 16px;
+}
+
+@media (max-width: 1200px) {
+  .heroCardDescription {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroCardDescription {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroCardDescription {
+    font-size: 16px;
+  }
+}
