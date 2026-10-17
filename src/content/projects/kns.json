@@ -24,5 +24,63 @@
       "propertiesUrl": "/models/kns/properties-tx.json",
       "demoScene": false
     }
+  ],
+  "sheets": [
+    {
+      "id": "tx-0-1",
+      "number": "0-1",
+      "title": "Титульный лист",
+      "layer": "tx",
+      "imageUrl": "/models/kns/sheets/tx/0-1.png",
+      "svgUrl": "/models/kns/sheets/tx/0-1.svg"
+    },
+    {
+      "id": "tx-0-2",
+      "number": "0-2",
+      "title": "Титульный лист (подписи)",
+      "layer": "tx",
+      "imageUrl": "/models/kns/sheets/tx/0-2.png",
+      "svgUrl": "/models/kns/sheets/tx/0-2.svg"
+    },
+    {
+      "id": "tx-1",
+      "number": "1",
+      "title": "Общие данные. Схема трубопровода КНС",
+      "layer": "tx",
+      "imageUrl": "/models/kns/sheets/tx/1.png",
+      "svgUrl": "/models/kns/sheets/tx/1.svg"
+    },
+    {
+      "id": "tx-2",
+      "number": "2",
+      "title": "Технологический план на отм. 0,200. Разрез 1-1",
+      "layer": "tx",
+      "imageUrl": "/models/kns/sheets/tx/2.png",
+      "svgUrl": "/models/kns/sheets/tx/2.svg"
+    },
+    {
+      "id": "tx-3",
+      "number": "3",
+      "title": "Разрез 1-1, 3D вид",
+      "layer": "tx",
+      "imageUrl": "/models/kns/sheets/tx/3.png",
+      "svgUrl": "/models/kns/sheets/tx/3.svg"
+    },
+    {
+      "id": "tx-4",
+      "number": "4",
+      "title": "Технологический план ниже 0,000. Схема трубопровода",
+      "layer": "tx",
+      "imageUrl": "/models/kns/sheets/tx/4.png",
+      "svgUrl": "/models/kns/sheets/tx/4.svg"
+    },
+    {
+      "id": "tx-5",
+      "number": "5",
+      "title": "Спецификация оборудования, изделий и материалов",
+      "layer": "tx",
+      "imageUrl": "/models/kns/sheets/tx/5.png",
+      "svgUrl": "/models/kns/sheets/tx/5.svg"
+    }
   ]
 }

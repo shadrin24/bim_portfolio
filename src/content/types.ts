@@ -155,6 +155,19 @@ export type ProjectKpi = {
   aggregateKey?: string;
 };
 
+/** Лист Revit: растр всего листа + SVG hit-оверлей (`data-element-id` = UniqueId) */
+export type ProjectSheet = {
+  id: string;
+  title: string;
+  number?: string;
+  /** PNG всего листа (штамп, аннотации, виды) */
+  imageUrl: string;
+  /** Прозрачный SVG-оверлей для клика по элементам модели */
+  svgUrl: string;
+  /** Слой модели: kr | tx */
+  layer?: string;
+};
+
 export type Project = {
   slug: string;
   /** Полное название объекта (после пароля) */
@@ -177,6 +190,8 @@ export type Project = {
   demoScene?: boolean;
   /** Запасные KPI (если нет индекса или для превью в списке) */
   kpis?: ProjectKpi[];
+  /** Листы документации (SVG с кликабельными UniqueId) */
+  sheets?: ProjectSheet[];
 };
 
 export type ModelElement = {

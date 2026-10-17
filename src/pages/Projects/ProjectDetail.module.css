@@ -125,6 +125,10 @@
   padding-top: 8px;
 }
 
+.sheets {
+  margin-bottom: 8px;
+}
+
 .workspace {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr) 320px;

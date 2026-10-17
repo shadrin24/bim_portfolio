@@ -12,6 +12,10 @@ import { cx } from '../../utils/cx';
 import style from './ProjectDetail.module.css';
 
 const ModelViewer = lazy(() => import('../../components/organisms/ModelViewer/ModelViewer'));
+const SheetViewer = lazy(() => import('../../components/organisms/SheetViewer/SheetViewer'));
+
+/** Листы (PNG+SVG hit). Включить, когда доработаем выравнивание оверлея. */
+const ENABLE_SHEET_VIEWER = false;
 
 const phaseParamKey = (layerId: string) => `phase_${layerId}`;
 
@@ -48,6 +52,9 @@ const parseLayerPhaseSelection = (
   }
   return { mode: 'partial', indices };
 };
+
+/** Стадии, которые не показываем в 3D и в таймлайне */
+const HIDDEN_PHASE_NAMES = new Set(['Новая конструкция']);
 
 const AGGREGATE_ORDER = [
   'concreteB25',
@@ -160,10 +167,20 @@ const ProjectDetail = () => {
   }, [highlightKey, index]);
 
   const groundElevationM = index?.ground?.elevationM ?? null;
+
+  const hiddenElementIds = useMemo(() => {
+    if (!index?.elements?.length) return null;
+    const ids = index.elements
+      .filter((el) => el.phase != null && HIDDEN_PHASE_NAMES.has(el.phase))
+      .map((el) => el.id);
+    return ids.length ? ids : null;
+  }, [index]);
+
   const phaseIndexById = useMemo(() => {
     if (!index?.elements?.length) return null;
     const map: Record<string, number> = {};
     for (const el of index.elements) {
+      if (el.phase != null && HIDDEN_PHASE_NAMES.has(el.phase)) continue;
       if (typeof el.phaseIndex === 'number') map[el.id] = el.phaseIndex;
     }
     return Object.keys(map).length ? map : null;
@@ -177,6 +194,7 @@ const ProjectDetail = () => {
 
     for (const el of index.elements) {
       if (typeof el.phaseIndex !== 'number') continue;
+      if (el.phase != null && HIDDEN_PHASE_NAMES.has(el.phase)) continue;
       const layerId = el.layer || 'default';
       let set = usedByLayer.get(layerId);
       if (!set) {
@@ -189,7 +207,10 @@ const ProjectDetail = () => {
     for (const [layerId, used] of usedByLayer) {
       const phases = [...used]
         .map((i) => phaseByIndex.get(i))
-        .filter((p): p is ModelPhase => Boolean(p))
+        .filter(
+          (p): p is ModelPhase =>
+            Boolean(p) && !HIDDEN_PHASE_NAMES.has(p!.name),
+        )
         .sort((a, b) => a.index - b.index);
       map.set(layerId, phases);
     }
@@ -529,6 +550,7 @@ const ProjectDetail = () => {
                   visibleLayerIds={visibleLayerIds}
                   groundElevationM={groundElevationM}
                   groundElementIds={groundElementIds}
+                  hiddenIds={hiddenElementIds}
                   onSelect={onSelect}
                 />
               </Suspense>
@@ -556,6 +578,19 @@ const ProjectDetail = () => {
 
         {indexLoading && <p className={style.meta}>Загрузка свойств модели…</p>}
         {indexError && <p className={style.error}>Индекс свойств: {indexError}</p>}
+
+        {ENABLE_SHEET_VIEWER && project.sheets && project.sheets.length > 0 && (
+          <section className={style.sheets}>
+            <SectionHeading eyebrow="Документация" title="Листы" align="left" />
+            <Suspense fallback={<p className={style.meta}>Загрузка листов…</p>}>
+              <SheetViewer
+                sheets={project.sheets}
+                selectedId={selectedId}
+                onSelect={onSelect}
+              />
+            </Suspense>
+          </section>
+        )}
 
         <div className={style.aggregates}>
           {aggregates.map((aggregate) => (

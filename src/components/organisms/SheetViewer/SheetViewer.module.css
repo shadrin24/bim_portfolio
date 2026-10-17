@@ -1,0 +1,144 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tab {
+  padding: 6px 14px;
+  font: var(--font-12-bold);
+  letter-spacing: 0.5px;
+  color: var(--gray-border);
+  background: transparent;
+  border: 1px solid rgba(0, 188, 212, 0.35);
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--white);
+  border-color: rgba(0, 188, 212, 0.7);
+}
+
+.tabActive {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: rgba(0, 188, 212, 0.1);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.toolBtn {
+  padding: 4px 10px;
+  font: var(--font-12-bold);
+  color: var(--gray-border);
+  background: transparent;
+  border: 1px solid rgba(0, 188, 212, 0.35);
+  cursor: pointer;
+}
+
+.toolBtn:hover {
+  color: var(--white);
+}
+
+.hint {
+  font: var(--font-12-normal);
+  color: var(--gray-border);
+}
+
+.viewport {
+  position: relative;
+  height: min(70vh, 720px);
+  min-height: 280px;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background: #d8dde3;
+  border: 1px solid rgba(0, 188, 212, 0.35);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.viewportPanning {
+  cursor: grabbing;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.stack {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.sheetImage {
+  display: block;
+  max-width: none;
+  height: auto;
+  pointer-events: none;
+  background: #ffffff;
+}
+
+.svgOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.svgOverlay :global(svg) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.svgOverlay :global([data-element-id]) {
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+.svgOverlay :global([data-element-id]:hover) {
+  stroke: #00bcd4 !important;
+  stroke-opacity: 0.9 !important;
+}
+
+.svgOverlay :global([data-element-id].sheetSelected) {
+  stroke: #ffeb3b !important;
+  stroke-opacity: 1 !important;
+  stroke-width: 3px !important;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: min(70vh, 720px);
+  min-height: 280px;
+  font: var(--font-14-normal);
+  color: var(--gray-border);
+  background: rgba(10, 22, 40, 0.5);
+  border: 1px solid rgba(0, 188, 212, 0.35);
+}
+
+.error {
+  color: #ff8a80;
+}

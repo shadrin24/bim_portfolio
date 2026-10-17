@@ -31,6 +31,8 @@ type ModelViewerProps = {
   groundElevationM?: number | null;
   /** UniqueId элементов «земли» — запасной вариант, если elevation не задана */
   groundElementIds?: string[] | null;
+  /** Всегда скрывать эти UniqueId (например стадия «Новая конструкция») */
+  hiddenIds?: string[] | null;
   onSelect?: (elementId: string | null) => void;
 };
 
@@ -120,7 +122,13 @@ const applyMeshVisibility = (
   layersAllowed: string[] | null | undefined,
   phasesByLayer: Record<string, number[] | null> | null | undefined,
   byId: Record<string, number> | null,
+  hiddenIds?: Set<string> | null,
 ) => {
+  const id = mesh.userData.elementId as string | undefined;
+  if (id && hiddenIds?.has(id)) {
+    mesh.visible = false;
+    return;
+  }
   mesh.visible =
     meshVisibleForLayer(mesh, layersAllowed) &&
     meshVisibleForPhase(mesh, phasesByLayer, byId);
@@ -149,6 +157,7 @@ const ModelViewer = ({
   visibleLayerIds = null,
   groundElevationM = null,
   groundElementIds = null,
+  hiddenIds = null,
   onSelect,
 }: ModelViewerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -473,10 +482,17 @@ const ModelViewer = ({
   useEffect(() => {
     const api = apiRef.current;
     if (!api) return;
+    const hidden = hiddenIds?.length ? new Set(hiddenIds) : null;
     api.meshes.forEach((mesh) => {
-      applyMeshVisibility(mesh, visibleLayerIds, visiblePhasesByLayer, phaseIndexById);
+      applyMeshVisibility(
+        mesh,
+        visibleLayerIds,
+        visiblePhasesByLayer,
+        phaseIndexById,
+        hidden,
+      );
     });
-  }, [visibleLayerIds, visiblePhasesByLayer, phaseIndexById, status]);
+  }, [visibleLayerIds, visiblePhasesByLayer, phaseIndexById, hiddenIds, status]);
 
   useEffect(() => {
     const api = apiRef.current;
