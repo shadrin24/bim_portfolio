@@ -6,7 +6,7 @@
 | `model.glb` | Геометрия КР |
 | `properties-tx.json` | Индекс ТХ |
 | `model-tx.glb` | Геометрия ТХ |
-| `cover.png` | Обложка |
+| `icon.png` | Обложка |
 | `sheets/kr/*.png` | Вид листа КР (штамп, аннотации, виды) |
 | `sheets/kr/*.svg` | Hit-оверлей КР (`data-element-id`) |
 | `sheets/tx/*.png` | Вид листа ТХ |

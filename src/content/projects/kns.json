@@ -5,7 +5,7 @@
   "disciplines": ["КР", "ТХ"],
   "description": "Типовая канализационная насосная станция: КР (бетон, утеплитель, павильон) и ТХ (трубопроводы, насосы, арматура).",
   "modelUpdatedAt": "2026-10-05",
-  "cover": "/models/kns/cover.png",
+  "cover": "/models/kns/icon.png",
   "modelUrl": "/models/kns/model.glb",
   "propertiesUrl": "/models/kns/properties.json",
   "demoScene": false,

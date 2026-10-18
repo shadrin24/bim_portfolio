@@ -6,39 +6,62 @@ type PropertyPanelProps = {
   onClose?: () => void;
 };
 
+const isFilled = (value: string | number | boolean | null | undefined) => {
+  if (value == null) return false;
+  if (typeof value === 'string') return value.trim().length > 0;
+  return true;
+};
+
+const isTxElement = (element: ModelElement) =>
+  element.layer === 'tx' || element.section === 'ТХ' || element.section === 'TX';
+
 const rows = (element: ModelElement) => {
   const sectionLabel =
     element.section ??
-    (element.layer === 'tx' ? 'ТХ' : element.layer === 'kr' ? 'КР' : (element.layer ?? '—'));
-  const items: Array<{ label: string; value: string }> = [
+    (element.layer === 'tx' ? 'ТХ' : element.layer === 'kr' ? 'КР' : element.layer);
+  const isTx = isTxElement(element);
+
+  const candidates: Array<{ label: string; value: string | null | undefined }> = [
     { label: 'Раздел', value: sectionLabel },
     { label: 'Категория', value: element.category },
-    { label: 'Семейство', value: element.family ?? '—' },
-    { label: 'Тип', value: element.type ?? '—' },
-    { label: 'Уровень', value: element.level ?? '—' },
-    { label: 'Система', value: element.system ?? '—' },
-    { label: 'Материал', value: element.material ?? '—' },
-    { label: 'Марка бетона', value: element.concreteGrade ?? '—' },
-    {
-      label: 'Объём',
-      value: element.volume != null ? `${element.volume} м³` : '—',
-    },
+    { label: 'Семейство', value: element.family },
+    { label: 'Тип', value: element.type },
+    { label: 'Уровень', value: element.level },
+    { label: 'Материал', value: element.material },
+    { label: 'Марка бетона', value: element.concreteGrade },
     {
       label: 'Длина',
-      value: element.length != null ? `${element.length} м` : '—',
+      value: element.length != null ? `${element.length} м` : null,
     },
     {
       label: 'Диаметр',
-      value: element.diameterMm != null ? `${element.diameterMm} мм` : '—',
+      value: element.diameterMm != null ? `${element.diameterMm} мм` : null,
     },
-    { label: 'Марка', value: element.mark ?? '—' },
-    { label: 'Комментарий', value: element.comment ?? '—' },
+    { label: 'Марка', value: element.mark },
+    { label: 'Комментарий', value: element.comment },
   ];
+
+  if (!isTx) {
+    candidates.splice(
+      5,
+      0,
+      { label: 'Система', value: element.system },
+      {
+        label: 'Объём',
+        value: element.volume != null ? `${element.volume} м³` : null,
+      },
+    );
+  }
+
+  const items = candidates
+    .filter((row) => isFilled(row.value))
+    .map((row) => ({ label: row.label, value: String(row.value).trim() }));
 
   if (element.params) {
     for (const [key, value] of Object.entries(element.params)) {
-      if (value == null || value === '') continue;
-      items.push({ label: key, value: String(value) });
+      if (!isFilled(value)) continue;
+      if (isTx && /^(объ[её]м|volume|система|system)$/i.test(key.trim())) continue;
+      items.push({ label: key, value: String(value).trim() });
     }
   }
 

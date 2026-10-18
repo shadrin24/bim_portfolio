@@ -1,5 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import Title from '../../components/atoms/Title/Title';
 import AggregateBlock from '../../components/molecules/AggregateBlock/AggregateBlock';
 import PageContainer from '../../components/molecules/PageContainer/PageContainer';
 import PhaseTimeline from '../../components/molecules/PhaseTimeline/PhaseTimeline';
@@ -56,15 +57,19 @@ const parseLayerPhaseSelection = (
 /** Стадии, которые не показываем в 3D и в таймлайне */
 const HIDDEN_PHASE_NAMES = new Set(['Новая конструкция']);
 
-const AGGREGATE_ORDER = [
-  'concreteB25',
-  'concreteB75',
-  'curbsLength',
-  'pipesLength',
-  'fittingsCount',
-  'valvesCount',
+const KR_AGGREGATE_KEYS = ['concreteB25', 'concreteB75', 'curbsLength'] as const;
+const TX_AGGREGATE_KEYS = [
   'equipmentCount',
+  'valvesCount',
+  'fittingsCount',
+  'pipesLength',
 ] as const;
+const AGGREGATE_ORDER = [...KR_AGGREGATE_KEYS, ...TX_AGGREGATE_KEYS] as const;
+
+type SpecTabId = 'kr' | 'tx';
+
+const isKrAggregateKey = (key: string) =>
+  key.startsWith('concrete') || key === 'curbsLength';
 
 const FALLBACK_LABELS: Record<string, { label: string; unit: string }> = {
   concreteB25: { label: 'Бетон B25', unit: 'м³' },
@@ -72,7 +77,7 @@ const FALLBACK_LABELS: Record<string, { label: string; unit: string }> = {
   curbsLength: { label: 'Длина бордюров', unit: 'м' },
   pipesLength: { label: 'Длина трубопроводов', unit: 'м' },
   fittingsCount: { label: 'Фитинги', unit: 'шт.' },
-  valvesCount: { label: 'Арматура', unit: 'шт.' },
+  valvesCount: { label: 'Запорная арматура', unit: 'шт.' },
   equipmentCount: { label: 'Оборудование', unit: 'шт.' },
 };
 
@@ -103,7 +108,8 @@ const ProjectDetail = () => {
   const project = loadProjectBySlug(slug);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const selectedId = searchParams.get('element');
+  const selectedIds = searchParams.getAll('element');
+  const selectedId = selectedIds[0] ?? null;
   const highlightKey = searchParams.get('highlight');
 
   const projectLayers = useMemo(
@@ -132,22 +138,16 @@ const ProjectDetail = () => {
   const aggregates = useMemo((): ModelAggregate[] => {
     const fromIndex = index?.aggregates ?? [];
     const byKey = new Map(fromIndex.map((a) => [a.key, a]));
-    const hasKr = fromIndex.some((a) => a.key.startsWith('concrete') || a.key === 'curbsLength');
-    const hasTx = fromIndex.some(
-      (a) =>
-        a.key === 'pipesLength' ||
-        a.key === 'fittingsCount' ||
-        a.key === 'valvesCount' ||
-        a.key === 'equipmentCount',
-    );
+    const hasKr = fromIndex.some((a) => isKrAggregateKey(a.key));
+    const txKeySet = new Set<string>(TX_AGGREGATE_KEYS);
+    const hasTx = fromIndex.some((a) => txKeySet.has(a.key));
 
     return AGGREGATE_ORDER.map((key) => {
       const found = byKey.get(key);
       if (found) return found;
-      const isKr = key.startsWith('concrete') || key === 'curbsLength';
-      const isTx = !isKr;
+      const isKr = isKrAggregateKey(key);
       if (isKr && !hasKr) return null;
-      if (isTx && !hasTx) return null;
+      if (!isKr && !hasTx) return null;
       const fb = FALLBACK_LABELS[key];
       return {
         key,
@@ -158,6 +158,25 @@ const ProjectDetail = () => {
       };
     }).filter((a): a is ModelAggregate => Boolean(a));
   }, [index]);
+
+  const krAggregates = useMemo(
+    () => aggregates.filter((a) => isKrAggregateKey(a.key)),
+    [aggregates],
+  );
+  const txAggregates = useMemo(
+    () => aggregates.filter((a) => !isKrAggregateKey(a.key)),
+    [aggregates],
+  );
+
+  const [specTab, setSpecTab] = useState<SpecTabId>('tx');
+
+  useEffect(() => {
+    if (krAggregates.length && !txAggregates.length) setSpecTab('kr');
+    else if (txAggregates.length && !krAggregates.length) setSpecTab('tx');
+  }, [krAggregates.length, txAggregates.length]);
+
+  const visibleAggregates = specTab === 'kr' ? krAggregates : txAggregates;
+  const showSpecTabs = krAggregates.length > 0 && txAggregates.length > 0;
 
   const highlightIds = useMemo(() => {
     if (!highlightKey || !index) return null;
@@ -431,8 +450,8 @@ const ProjectDetail = () => {
   const onSelect = useCallback(
     (elementId: string | null) => {
       const next = new URLSearchParams(searchParams);
-      if (elementId) next.set('element', elementId);
-      else next.delete('element');
+      next.delete('element');
+      if (elementId) next.append('element', elementId);
       setSearchParams(next, { replace: true });
     },
     [searchParams, setSearchParams],
@@ -446,9 +465,10 @@ const ProjectDetail = () => {
     setSearchParams(next, { replace: true });
   };
 
-  const onSelectFromList = (id: string) => {
+  const onSelectFromList = (ids: string[]) => {
     const next = new URLSearchParams(searchParams);
-    next.set('element', id);
+    next.delete('element');
+    for (const id of ids) next.append('element', id);
     next.delete('highlight');
     setSearchParams(next, { replace: true });
   };
@@ -484,37 +504,37 @@ const ProjectDetail = () => {
         </Link>
 
         <div className={style.titleRow}>
-          <SectionHeading
-            eyebrow="Проект"
-            title={project.title}
-            align="left"
-            className={style.projectHeading}
-          />
-          {projectLayers.length > 0 && (
-            <div className={style.layerToggles} role="group" aria-label="Слои модели">
-              {projectLayers.map((layer) => {
-                const active =
-                  layerSelection.mode === 'all' || layerSelection.ids.includes(layer.id);
-                const hasModel = Boolean(layer.modelUrl || layer.demoScene);
-                return (
-                  <button
-                    key={layer.id}
-                    type="button"
-                    className={cx(style.layerBtn, active && style.layerBtnActive)}
-                    onClick={() => onToggleLayer(layer.id)}
-                    aria-pressed={active}
-                    title={
-                      hasModel
-                        ? `Показать / скрыть слой ${layer.label}`
-                        : `${layer.label}: геометрия будет добавлена`
-                    }
-                  >
-                    {layer.label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          <span className={style.projectEyebrow}>Проект</span>
+          <div className={style.projectTitleRow}>
+            <Title level={2} className={style.projectTitle}>
+              {project.title}
+            </Title>
+            {projectLayers.length > 0 && (
+              <div className={style.layerToggles} role="group" aria-label="Слои модели">
+                {projectLayers.map((layer) => {
+                  const active =
+                    layerSelection.mode === 'all' || layerSelection.ids.includes(layer.id);
+                  const hasModel = Boolean(layer.modelUrl || layer.demoScene);
+                  return (
+                    <button
+                      key={layer.id}
+                      type="button"
+                      className={cx(style.layerBtn, active && style.layerBtnActive)}
+                      onClick={() => onToggleLayer(layer.id)}
+                      aria-pressed={active}
+                      title={
+                        hasModel
+                          ? `Показать / скрыть слой ${layer.label}`
+                          : `${layer.label}: геометрия будет добавлена`
+                      }
+                    >
+                      {layer.label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className={style.workspace}>
@@ -544,6 +564,7 @@ const ProjectDetail = () => {
                   modelUrl={project.modelUrl}
                   demoScene={project.demoScene}
                   selectedId={selectedId}
+                  selectedIds={selectedIds.length ? selectedIds : null}
                   highlightIds={highlightIds}
                   phaseIndexById={phaseIndexById}
                   visiblePhasesByLayer={visiblePhasesByLayer}
@@ -592,19 +613,53 @@ const ProjectDetail = () => {
           </section>
         )}
 
-        <div className={style.aggregates}>
-          {aggregates.map((aggregate) => (
-            <AggregateBlock
-              key={aggregate.key}
-              aggregate={aggregate}
-              elements={index?.elements ?? []}
-              selectedId={selectedId}
-              highlightActive={highlightKey === aggregate.key}
-              onToggleHighlight={() => onToggleHighlight(aggregate.key)}
-              onSelectElement={onSelectFromList}
-            />
-          ))}
-        </div>
+        {aggregates.length > 0 && (
+          <section className={style.specs}>
+            <div className={style.specsHeader}>
+              <span className={style.specsEyebrow}>Модель</span>
+              <div className={style.specsTitleRow}>
+                <Title level={2} className={style.specsTitle}>
+                  Спецификации
+                </Title>
+                {showSpecTabs && (
+                  <div className={style.specTabs} role="tablist" aria-label="Раздел спецификации">
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={specTab === 'kr'}
+                      className={cx(style.specTab, specTab === 'kr' && style.specTabActive)}
+                      onClick={() => setSpecTab('kr')}
+                    >
+                      КР
+                    </button>
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={specTab === 'tx'}
+                      className={cx(style.specTab, specTab === 'tx' && style.specTabActive)}
+                      onClick={() => setSpecTab('tx')}
+                    >
+                      ТХ
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className={style.aggregates}>
+              {visibleAggregates.map((aggregate) => (
+                <AggregateBlock
+                  key={aggregate.key}
+                  aggregate={aggregate}
+                  elements={index?.elements ?? []}
+                  selectedIds={selectedIds.length ? selectedIds : null}
+                  highlightActive={highlightKey === aggregate.key}
+                  onToggleHighlight={() => onToggleHighlight(aggregate.key)}
+                  onSelectElement={onSelectFromList}
+                />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </PageContainer>
   );

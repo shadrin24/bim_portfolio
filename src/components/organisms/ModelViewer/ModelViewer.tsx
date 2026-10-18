@@ -17,6 +17,8 @@ type ModelViewerProps = {
   modelUrl?: string;
   demoScene?: boolean;
   selectedId?: string | null;
+  /** Несколько выделенных UniqueId (группа из Спеки) */
+  selectedIds?: string[] | null;
   highlightIds?: string[] | null;
   /** UniqueId → phaseIndex; больше = позже → выше renderOrder */
   phaseIndexById?: Record<string, number> | null;
@@ -151,6 +153,7 @@ const ModelViewer = ({
   modelUrl,
   demoScene = false,
   selectedId = null,
+  selectedIds = null,
   highlightIds = null,
   phaseIndexById = null,
   visiblePhasesByLayer = null,
@@ -409,8 +412,24 @@ const ModelViewer = ({
       renderer.setSize(width, height, false);
     };
 
+    // Выбор только по клику без драга — иначе орбита OrbitControls сбрасывает выделение.
+    const CLICK_MAX_MOVE_PX = 5;
+    let pointerDown: { x: number; y: number; button: number } | null = null;
+
     const onPointerDown = (event: PointerEvent) => {
+      if (event.button !== 0) return;
+      pointerDown = { x: event.clientX, y: event.clientY, button: event.button };
+    };
+
+    const onPointerUp = (event: PointerEvent) => {
+      if (!pointerDown || event.button !== pointerDown.button) return;
+      const dx = event.clientX - pointerDown.x;
+      const dy = event.clientY - pointerDown.y;
+      const dragged = dx * dx + dy * dy > CLICK_MAX_MOVE_PX * CLICK_MAX_MOVE_PX;
+      pointerDown = null;
+      if (dragged) return;
       if (!apiRef.current || !onSelectRef.current) return;
+
       const rect = renderer.domElement.getBoundingClientRect();
       pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -429,6 +448,10 @@ const ModelViewer = ({
       onSelectRef.current(id);
     };
 
+    const onPointerCancel = () => {
+      pointerDown = null;
+    };
+
     const animate = () => {
       if (disposed) return;
       controls.update();
@@ -442,12 +465,17 @@ const ModelViewer = ({
 
     const ro = new ResizeObserver(resize);
     ro.observe(container);
-    renderer.domElement.addEventListener('pointerdown', onPointerDown);
+    const canvas = renderer.domElement;
+    canvas.addEventListener('pointerdown', onPointerDown);
+    canvas.addEventListener('pointerup', onPointerUp);
+    canvas.addEventListener('pointercancel', onPointerCancel);
 
     return () => {
       disposed = true;
       ro.disconnect();
-      renderer.domElement.removeEventListener('pointerdown', onPointerDown);
+      canvas.removeEventListener('pointerdown', onPointerDown);
+      canvas.removeEventListener('pointerup', onPointerUp);
+      canvas.removeEventListener('pointercancel', onPointerCancel);
       controls.dispose();
       renderer.dispose();
       if (grid) {
@@ -499,6 +527,9 @@ const ModelViewer = ({
     if (!api) return;
 
     const highlightSet = new Set(highlightIds ?? []);
+    const selectedSet = new Set(
+      selectedIds?.length ? selectedIds : selectedId ? [selectedId] : [],
+    );
     const created: THREE.Material[] = [];
 
     const styleMaterial = (source: THREE.Material, mode: 'ghost' | 'accent') => {
@@ -551,7 +582,7 @@ const ModelViewer = ({
         return;
       }
 
-      const isSelected = Boolean(selectedId && id === selectedId);
+      const isSelected = Boolean(id && selectedSet.has(id));
       const isHighlighted = Boolean(id && highlightSet.has(id));
 
       if (isSelected || isHighlighted) {
@@ -571,7 +602,7 @@ const ModelViewer = ({
       });
       created.forEach((m) => m.dispose());
     };
-  }, [selectedId, highlightIds, status, visiblePhasesByLayer, visibleLayerIds]);
+  }, [selectedId, selectedIds, highlightIds, status, visiblePhasesByLayer, visibleLayerIds]);
 
   const fitView = () => {
     const api = apiRef.current;

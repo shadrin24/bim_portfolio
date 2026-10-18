@@ -51,26 +51,37 @@
   margin-bottom: 32px;
 }
 
-.projectHeading {
-  margin-bottom: 0 !important;
-  flex: 1;
-  min-width: 0;
-}
-
 .titleRow {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px 20px;
+  flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 16px;
+}
+
+.projectEyebrow {
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.projectTitleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+
+.projectTitle {
+  margin: 0;
 }
 
 .layerToggles {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding-bottom: 4px;
 }
 
 .layerBtn {
@@ -107,11 +118,69 @@
   color: var(--gray-border);
 }
 
+.specs {
+  margin-bottom: 24px;
+}
+
+.specsHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.specsEyebrow {
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.specsTitleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+
+.specsTitle {
+  margin: 0;
+}
+
+.specTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.specTab {
+  padding: 6px 14px;
+  font: var(--font-12-bold);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--gray-border);
+  background: transparent;
+  border: 1px solid rgba(0, 188, 212, 0.35);
+  cursor: pointer;
+}
+
+.specTab:hover {
+  color: var(--white);
+  border-color: rgba(0, 188, 212, 0.7);
+}
+
+.specTabActive {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: rgba(0, 188, 212, 0.1);
+}
+
 .aggregates {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  margin-bottom: 24px;
   align-items: start;
 }
 

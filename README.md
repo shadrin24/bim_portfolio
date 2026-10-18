@@ -14,7 +14,7 @@ npm run dev
 
 ## Данные модели
 
-`public/models/kns/` — `model.glb`, `model-tx.glb`, `properties.json`, `properties-tx.json`, `cover.png`, `sheets/kr|tx/*`.
+`public/models/kns/` — `model.glb`, `model-tx.glb`, `properties.json`, `properties-tx.json`, `icon.png`, `sheets/kr|tx/*`.
 
 Новый проект: добавьте `src/content/projects/<slug>.json` и ассеты в `public/models/<slug>/`.
 
